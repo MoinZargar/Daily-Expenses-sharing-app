@@ -1,25 +1,23 @@
-class apiError extends Error{
+class apiError extends Error {
     constructor(
         statusCode,
-        message="Something went wrong",
+        message= "Something went wrong",
         errors = [],
-        stack="",
-
-
+        stack = ""
     ){
         super(message)
-        this.message=message
-        this.statusCode=statusCode
-        this.data=null
-        this.success=false
-        this.errors=errors
-        
-        if(stack){
-            this.stack=stack
-        }
-        else{
+        this.statusCode = statusCode
+        this.data = null
+        this.message = message
+        this.success = false;
+        this.errors = errors
+
+        if (stack) {
+            this.stack = stack
+        } else{
             Error.captureStackTrace(this, this.constructor)
         }
+
     }
 }
 

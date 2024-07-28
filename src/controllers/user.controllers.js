@@ -1,21 +1,37 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { User } from "../models/user.models.js";
 import { apiError } from "../utils/apiError.js";
+import {apiResponse} from "../utils/apiResponse.js"
+
+
+const generateAccessAndRefreshToken = async(userId)=>{
+   try {
+      const user = await User.findById(userId)
+      const accessToken = user.generateAccessToken()
+      const refreshToken = user.generateRefreshToken()
+
+      //save refresh  token in db
+
+      user.refreshToken = refreshToken
+      await user.save({ validateBeforeSave : false })
+
+      return {accessToken , refreshToken}
+
+   } 
+   catch (error) {
+      throw new apiError(500,"Something went wrong while generating Access and Refresh token")
+   }
+}
 
 const registerUser = asyncHandler(async (req, res) => {
    //take data from frontend
-   const { name, email, mobileNumber, password } = req.body;
-
-   if (
-      [name, email, mobileNumber, password].some((feild) => (
-         feild?.trim === ""
-      ))
-
-   ) {
-      throw new apiError(400, "All feilds are required")
-   }
+   const {name,email,mobileNumber,password} = req.body
+  
+   if([name,email,mobileNumber,password].some(field=>field?.trim()==="")){
+      throw new apiError(400,"All fields are required")
+  }
    //check if user already exits in database 
-   const existedUser = User.findOne({
+   const existedUser =await User.findOne({
       $or: [
          { name },
          { email },
@@ -34,7 +50,7 @@ const registerUser = asyncHandler(async (req, res) => {
       password
    })
    // check if user is stored successfully in db and remove password and refresh Token
-   const createdUser = User.findById(user._id).select(
+   const createdUser =await User.findById(user._id).select(
       "-password -refreshToken"
    )
 
@@ -50,4 +66,115 @@ const registerUser = asyncHandler(async (req, res) => {
 }
 )
 
-export { registerUser }
+const loginUser = asyncHandler(async(req,res)=>{
+
+    //get user details from frontend
+
+    const {email,password} = req.body
+
+    //valiadate email and password
+
+    if(!email || !password){
+      throw new apiError(400,"Email and password are required")
+    }
+
+    //check if user already exits in db
+
+    const user = await User.findOne({email})
+
+    if(!user){
+      throw new apiError(404,"User doesn't exists")
+    }
+
+    //verify password
+
+    const isPasswordCorrect=await user.isPasswordCorrect(password)
+
+    if(!isPasswordCorrect){
+      throw new apiError(401,"Invalid user credentials")
+    }
+
+    //generate access token and refresh token for user
+
+    const {accessToken , refreshToken} = await generateAccessAndRefreshToken(user._id)
+    
+    //send tokens in cookies
+    
+    const loggedInUser = await User.findById(user._id).select(
+      "-password -refreshToken"
+    )
+    
+    //setting options so that cookies can't be modified on frontend
+
+    const options = {
+       httpOnly : true,
+       secure : true
+    }
+
+    //send response
+    res.status(200).
+    cookie("accessToken",accessToken,options).
+    cookie("refreshToken",refreshToken,options).
+    json(
+      new apiResponse(
+         200,
+         {
+            user : loggedInUser,
+            accessToken,
+            refreshToken
+         },
+         "User logged In successfully"
+      )
+    )
+
+    
+})
+
+const logoutUser = asyncHandler(async(req,res)=>{
+   await User.findByIdAndUpdate(
+     req.user._id,
+     {
+        $set : {
+          refreshToken: undefined
+        }
+     },
+     {
+       new: true
+     }
+   )
+   const options = {
+     httpOnly : true,
+     secure : true
+  }
+
+  res
+  .status(200)
+  .clearCookie("accessToken",options)
+  .clearCookie("refreshToken",options)
+  .json(
+    new apiResponse(
+     200,
+     {},
+     "User logged out successfully"
+    )
+  )
+
+})
+
+const getUserDetails = asyncHandler(async (req,res)=>{
+     
+    const user = await User.findById(req.user._id).select("-password -refreshToken")
+    if(!user){
+      throw new apiError(404,"User not found")
+    }
+    res.status(200)
+    .json(
+      new apiResponse(200,user,"User details retreived successfully")
+    )
+
+})
+export { registerUser,
+   loginUser,
+   logoutUser,
+   getUserDetails
+ }

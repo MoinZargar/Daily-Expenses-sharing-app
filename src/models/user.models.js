@@ -13,7 +13,7 @@ const userSchema = new Schema(
     {
         name: {
             type: String,
-            required: [true,"Name is required"],
+            required: true,
             unique: true,
             lowercase: true,
             trim: true,
@@ -21,7 +21,7 @@ const userSchema = new Schema(
         },
         email: {
             type: String,
-            required: [true,"Email is required"],
+            required: true,
             unique: true,
             lowercase: true,
             trim: true,
@@ -34,12 +34,12 @@ const userSchema = new Schema(
                 validator: validateMobileNumber,
                 message: "Invalid Mobile number.",
             },
-            required:[true,"Mobile Number is required"],
+            required:true,
             default: "",
         },
         password: {
             type: String,
-            required: [true, "Password is required"]
+            required: true
         },
         refreshToken : {
             type : String
@@ -51,6 +51,7 @@ const userSchema = new Schema(
     }
 )
 // hashing password before saving it in a database  
+
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
 
