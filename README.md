@@ -8,6 +8,7 @@ This is a Node.js application built using Express.js and MongoDB Atlas to help u
   - [Prerequisites](#prerequisites)
   - [Cloning the Repository](#cloning-the-repository)
   - [Installing Dependencies](#installing-dependencies)
+  - [Installing Dependencies](#Setup Up MongoDB Atlas)
   - [Setting Up Environment Variables](#setting-up-environment-variables)
   - [Running the Application](#running-the-application)
 - [API Endpoints](#api-endpoints)
@@ -42,7 +43,7 @@ npm install
 Create a free account on MongoDB Atlas, set up a new cluster, and obtain the database connection string.
 
 
-#### Setting Up Environment Variables
+### Setting Up Environment Variables
 
 Create a .env file in the root directory and add the following environment variables.
 
@@ -55,3 +56,47 @@ ACCESS_TOKEN_EXPIRY = time span of access token e.g 1d
 REFRESH_TOKEN_SECRET =random string for refresh token secret
 REFRESH_TOKEN_EXPIRY =time span of refresh token e.g 10d
 ```
+
+### Running the Application
+
+```
+npm run dev 
+```
+
+## api-endpoints
+### user-endpoints
+
+#### Create user
+```
+API End Point : http://localhost:8000/api/v1/users/register
+```
+#### Login user
+```
+API End Point : http://localhost:8000/api/v1/users/login
+```
+#### Retreive user details
+```
+API End Point : http://localhost:8000/api/v1/users/info
+```
+
+#### Logout user
+```
+API End Point : http://localhost:8000/api/v1/users/logout
+```
+### expense-endpoints
+
+#### Add Expense
+```
+API End Point : http://localhost:8000/api/v1/expenses/addExpense
+```
+
+#### Retrieve individual user expenses. 
+```
+API End Point : http://localhost:8000/api/v1/expenses/individualExpense
+```
+#### Retrieve overall expenses. 
+```
+API End Point : http://localhost:8000/api/v1/expenses/balanceSheet
+```
+
+
