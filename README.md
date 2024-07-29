@@ -74,7 +74,8 @@ Feilds required for creating user
 Name, Email, Mobile Number , Password
 Input (Postman)
 ![1](https://github.com/user-attachments/assets/bfe895ce-7d97-4d6b-bc11-1803fc3dda85)
-
+Output :
+![1 op](https://github.com/user-attachments/assets/9ff2a8af-945c-4fab-bb83-7500c93e1870)
 
 
 #### Login user
