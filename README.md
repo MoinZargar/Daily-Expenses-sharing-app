@@ -70,6 +70,12 @@ npm run dev
 ```
 API End Point : http://localhost:8000/api/v1/users/register
 ```
+Feilds required for creating user
+Name, Email, Mobile Number , Password
+Input (Postman)
+https://github.com/user-attachments/assets/bfe895ce-7d97-4d6b-bc11-1803fc3dda85
+
+
 #### Login user
 ```
 API End Point : http://localhost:8000/api/v1/users/login
@@ -83,7 +89,7 @@ API End Point : http://localhost:8000/api/v1/users/info
 ```
 API End Point : http://localhost:8000/api/v1/users/logout
 ```
-### expense-endpoints
+### Expense-endpoints
 
 #### Add Expense
 ```
