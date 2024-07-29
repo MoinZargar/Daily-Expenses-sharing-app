@@ -32,3 +32,25 @@ First, clone the repository to your local machine:
 ```bash
 git clone https://github.com/MoinZargar/Daily-Expenses-sharing-app.git
 cd Daily-Expenses-sharing-app
+
+### Installing Dependencies
+```bash
+npm install
+
+### Setup Up MongoDB Atlas
+
+Create a free account on MongoDB Atlas, set up a new cluster, and obtain the database connection string.
+
+
+#### Setting Up Environment Variables
+
+Create a .env file in the root directory and add the following environment variables. Make sure to replace the placeholder values with your actual MongoDB Atlas connection string and other necessary configurations.
+
+```bash
+PORT= port on which app is running maily 8000
+MONGODB_URI= your mongodb atlas connection string
+CORS_ORIGIN= * 
+ACCESS_TOKEN_SECRET= random string for access token secret
+ACCESS_TOKEN_EXPIRY = time span of access token e.g 1d
+REFRESH_TOKEN_SECRET =random string for refresh token secret
+REFRESH_TOKEN_EXPIRY =time span of refresh token e.g 10d
