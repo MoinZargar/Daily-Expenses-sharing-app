@@ -65,7 +65,7 @@ REFRESH_TOKEN_EXPIRY =time span of refresh token e.g 10d
 npm run dev 
 ```
 
-## api-endpoints
+## API-endpoints
 ### user-endpoints
 
 #### Create user
@@ -138,7 +138,7 @@ Resposne <br>
 Response <br>
 ![4 3 op](https://github.com/user-attachments/assets/6f1b9bdd-ff53-4a6a-9e1a-c689eeec5ba4)
 
-#### Retrieve individual user expenses. 
+#### Retrieve individual user expense. 
 ***Secured Route***
 ```
 API End Point : http://localhost:8000/api/v1/expenses/individualExpense
@@ -153,7 +153,7 @@ API End Point : http://localhost:8000/api/v1/expenses/individualExpense
 #### Retrieve overall expenses. 
 ***Secured Route***
 ```
-API End Point : http://localhost:8000/api/v1/expenses/balanceSheet
+API End Point : http://localhost:8000/api/v1/expenses/overallExpense
 ```
 
 ![6](https://github.com/user-attachments/assets/89562ca7-25a9-4412-b224-4f8ac20b24a6)
@@ -161,7 +161,9 @@ API End Point : http://localhost:8000/api/v1/expenses/balanceSheet
 
 #### Download Balance Sheet.
 ***Secured Route***
-
+```
+API End Point : http://localhost:8000/api/v1/expenses/balanceSheet
+```
 ![7](https://github.com/user-attachments/assets/3e79c37e-23bf-4950-b2ea-836e768c0fb8)
 
 
