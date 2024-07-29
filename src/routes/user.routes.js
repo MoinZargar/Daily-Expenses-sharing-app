@@ -8,5 +8,5 @@ router.route("/login").post(loginUser)
 
 //secured routes
 router.route("/logout").post(verifyJwt , logoutUser)
-router.route("/info").post(verifyJwt,getUserDetails)
+router.route("/info").get(verifyJwt,getUserDetails)
 export default router

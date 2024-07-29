@@ -6,27 +6,25 @@ import { apiResponse } from "../utils/apiResponse.js";
 import PDFDocument from 'pdfkit';
 
 const addExpense = asyncHandler(async (req, res) => {
-    const { description, totalAmount, splitMethod, participants } = req.body;
+    const { description,splitMethod, participants } = req.body;
     const userId = req.user._id;
     const addedBy = userId;
+    let totalAmount=0;
 
     let members = [];
-    let percentageSum = 0;
-
+   
     const allowedSplitMethods = ["equal", "exact", "percentage"];
     if (!allowedSplitMethods.includes(splitMethod)) {
         throw new apiError(404, "Invalid split method. Choose from equal, exact, or percentage.");
     }
+    
+    // calculate overall / total expense
+    participants.map((participant)=>{
+        totalAmount+=participant.amount
+    })
+    
 
-    // Check if percentage sum is equal to 100
-    if (splitMethod === "percentage") {
-        participants.forEach((participant) => {
-            percentageSum += participant.amount;
-        });
-        if (percentageSum != 100) {
-            throw new apiError(401, "Sum of percentages should equal 100%");
-        }
-    }
+    
 
     // Check if all participants exist in DB and calculate the amount owed by each member
     await Promise.all(
@@ -50,15 +48,19 @@ const addExpense = asyncHandler(async (req, res) => {
                     participant: user._id,
                     amountOwed: participant.amount,
                 });
-            } else if (splitMethod === "percentage") {
+            } 
+            else  {
+                if(totalAmount != 100){
+                    throw new apiError(401, "Sum of percentages should equal 100%");
+                }
                 members.push({
                     participant: user._id,
-                    amountOwed: (totalAmount * participant.amount) / 100,
+                    amountOwed: participant.amount,
                 });
             }
         })
     );
-
+    
     const expense = await Expense.create({
         description,
         totalAmount,
@@ -86,7 +88,7 @@ const individualExpense = asyncHandler(async(req,res)=>{
     participants.map((member)=>{
         
         if(userId.toString() === member.participant.toString()){
-            console.log(member.amountOwed)
+           
            individualExpense=member.amountOwed
         }
     })
